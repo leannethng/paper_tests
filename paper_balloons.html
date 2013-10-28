@@ -7,7 +7,8 @@
 <script type="text/paperscript" canvas="myCanvas">
 
 var Balloon = function(position) {
-	// Create a Paper.js Path to draw a line into it:
+	//------------------------------
+	// Creating balloon head
 	var head = new Path();
 	head.fillColor = '#ff0000';
 	head.add(new Point(45, 75)); 
@@ -28,12 +29,19 @@ var Balloon = function(position) {
 	// Smooth the segments of the copy:
 	head.smooth();
 
+//***
+//Checking item is placed in active layer
+console.log(head.parent == project.activeLayer);
+
+//-----------------------------
+//creating the cord
+
 	// Create a new path and style it:
 	var cord = new Path({
 		// 80% black:
 		strokeColor: [0.8],
 		strokeWidth: 5,
-		strokeCap: 'square'
+		strokeCap: 'round'
 	});
 
 	// Add 5 segment points to the string spread out
@@ -48,25 +56,44 @@ var Balloon = function(position) {
 
 	cord.position.y = 135;
 
+
 	// Select the cord, so we can see how it is constructed:
 	cord.selected = false;
+
+//***
+//Checking item is placed in active layer
+console.log(cord.parent == project.activeLayer);
+
+//-------------------------------------------
 
 	// Create a group from the two paths:
 	// this.head = head;
 	this.cord = cord;
 	this.position = position;
+
+
+	//why is this in here?
 	this.group = new Group({
 		children: [head, cord]
 	});
 
+//***	
+
+//This code does't work, i don' think that group has been correctly defined perhaps
+
+//Might need to take the variable Balloon out and use the gruop instead?
+
+// console.log(head.parent == group); 
+
+
 	this.group.position = position;
+
+
 }
 
 
-
-
-
-
+//------------------------------
+//Animation
 
 Balloon.prototype.animate = function(event){
 	var cord = this.cord;
@@ -90,17 +117,24 @@ Balloon.prototype.animate = function(event){
 	}
 
 	// cord.position.x += 60;
-	
 
-	// Uncomment the following line and run the script again
-	// to smooth the this:
+
+			// Uncomment the following line and run the script again to smooth this:
 	cord.smooth();
 
-	cord.strokeCap = 'round';
+
 }
+
+
+//----------------------------
+//Creating new balloons
 
 var balloon = new Balloon(new Point(100, 100));
 var balloon2 = new Balloon(new Point(200, 200));
+
+
+//-----------------------
+//Calling the animation function
 
 function onFrame(event){
 	balloon.animate(event);
