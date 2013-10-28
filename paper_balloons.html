@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="paper-full.min.js"></script>
+<!-- Load external PaperScript and associate it with myCanvas -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var Balloon = function(position) {
+	// Create a Paper.js Path to draw a line into it:
+	var head = new Path();
+	head.fillColor = '#ff0000';
+	head.add(new Point(45, 75)); 
+	head.add(new Point(30, 25));
+	head.add(new Point(60, 3)); 
+	head.add(new Point(90, 25));
+	head.add(new Point(75, 75));
+	head.closed = true;
+
+	// Select the head, so we can see its handles:
+	head.fullySelected = false;
+
+	// Create a copy of the head and move it 100pt to the right:
+	// var copy = head.clone ();
+	// copy.fullySelected = false;
+	// copy.position.x += 100;
+
+	// Smooth the segments of the copy:
+	head.smooth();
+
+	// Create a new path and style it:
+	var cord = new Path({
+		// 80% black:
+		strokeColor: [0.8],
+		strokeWidth: 5,
+		strokeCap: 'square'
+	});
+
+	// Add 5 segment points to the string spread out
+	// over the width of the view:
+
+	// The amount of segment points we want to create:
+	var amount = 5;
+
+	for (var i = 0; i <= amount; i++) {
+		cord.add(new Point(1,i / amount) * 100);
+	}
+
+	cord.position.y = 135;
+
+	// Select the cord, so we can see how it is constructed:
+	cord.selected = false;
+
+	// Create a group from the two paths:
+	// this.head = head;
+	this.cord = cord;
+	this.position = position;
+	this.group = new Group({
+		children: [head, cord]
+	});
+
+	this.group.position = position;
+}
+
+
+
+
+
+
+
+Balloon.prototype.animate = function(event){
+	var cord = this.cord;
+
+	// The maximum height of the wave:
+	var width = 3;
+
+	//x offset
+	var xOffset = this.position.x;
+
+	// Loop through the segments of the cord:
+	for (var i = 0; i < cord.segments.length; i++) {
+		var segment = cord.segments[i];
+
+		// A cylic value between -1 and 1
+		var sinus = Math.sin(event.time + i);
+		
+		// Change the y position of the segment point:
+		segment.point.x = i * sinus * width + xOffset;
+
+	}
+
+	// cord.position.x += 60;
+	
+
+	// Uncomment the following line and run the script again
+	// to smooth the this:
+	cord.smooth();
+
+	cord.strokeCap = 'round';
+}
+
+var balloon = new Balloon(new Point(100, 100));
+var balloon2 = new Balloon(new Point(200, 200));
+
+function onFrame(event){
+	balloon.animate(event);
+	balloon2.animate(event);
+}
+
+</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
