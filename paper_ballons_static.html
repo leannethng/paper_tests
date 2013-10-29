@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="paper-full.min.js"></script>
+<!-- Load external PaperScript and associate it with myCanvas -->
+<script type="text/paperscript" canvas="myCanvas">
+
+//count for amount of balloons
+var count = 30;
+
+//-----------------------
+//creating the balloon head
+
+var head = new Path();
+	head.opacity = 0.5;
+	head.add(new Point(45, 75)); 
+	head.add(new Point(30, 25));
+	head.add(new Point(60, 3)); 
+	head.add(new Point(90, 25));
+	head.add(new Point(75, 75));
+	head.closed = true;
+
+	// Select the head, so we can see its handles:
+	head.fullySelected = false;
+
+	// Smooth the segments of the copy:
+	head.smooth();
+
+
+//-----------------------
+//creating the cord
+
+	// Create a new path and style it:
+	var cord = new Path({
+		// 80% black:
+		strokeColor: [0.8],
+		strokeWidth: 5,
+		strokeCap: 'round'
+	});
+
+	cord.add(new Point(60, 85));
+	cord.add(new Point(50, 105));
+	cord.add(new Point(70, 125));
+	cord.add(new Point(50, 145));
+	cord.add(new Point(65, 165));
+	cord.add(new Point(60, 185));
+
+
+	// Select the cord, so we can see how it is constructed:
+	cord.selected = false;
+// Smooth the segments of the copy:
+	cord.smooth();
+
+
+//-----------------------
+//Creating the group
+var group = new Group([head, cord]);
+
+//can add style to whole group
+group.style = {
+	// strokeColor: 'black'
+};
+
+
+//-----------------------
+//creating the symbol
+var symbol = new Symbol(group);
+
+// Place the instances of the symbol:
+for (var i = 0; i < count; i++) {
+	// The center position is a random point in the view:
+	var center = Point.random() * view.size;
+	var placedSymbol = symbol.place(center);
+	var child = project.activeLayer.children[i];
+	placedSymbol.scale(i / count);
+
+	//trying to have random colors for each balloon but only applies to all on refresh
+	group.firstChild.fillColor = 'red';
+	group.firstChild.fillColor.hue = Math.random() * 360;
+}
+
+
+//-----------------------
+//Animations
+// The onFrame function is called up to 60 times a second:
+function onFrame(event) {
+	// Run through the active layer's children list and change
+	// the position of the placed symbols:
+	for (var i = 0; i < count; i++) {
+		var item = project.activeLayer.children[i];
+		
+		// Move the item 1/20th of its width to the right. This way
+		// larger circles move faster than smaller circles:
+		item.position.x += item.bounds.width / 50;
+
+		// If the item has left the view on the right, move it back
+		// to the left:
+		if (item.bounds.left > view.size.width) {
+			item.position.x = -item.bounds.width;
+		}
+	}
+}
+
+</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
