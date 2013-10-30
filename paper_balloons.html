@@ -11,6 +11,7 @@ var Balloon = function(position) {
 	// Creating balloon head
 	var head = new Path();
 	head.fillColor = '#ff0000';
+	head.opacity = 0.5;
 	head.add(new Point(45, 75)); 
 	head.add(new Point(30, 25));
 	head.add(new Point(60, 3)); 
@@ -67,7 +68,7 @@ console.log(cord.parent == project.activeLayer);
 //-------------------------------------------
 
 	// Create a group from the two paths:
-	// this.head = head;
+	this.head = head;
 	this.cord = cord;
 	this.position = position;
 
@@ -129,16 +130,38 @@ Balloon.prototype.animate = function(event){
 //----------------------------
 //Creating new balloons
 
-var balloon = new Balloon(new Point(100, 100));
-var balloon2 = new Balloon(new Point(200, 200));
+var balloons = []
+var count = 20
+
+for (var i = 0; i < count; i++) {
+
+	var center = Point.random() * view.size;
+	var balloon = new Balloon(center);
+	balloon.head.fillColor = 'red';
+	balloon.head.fillColor.hue = Math.random() * 360;
+	balloons.push(balloon);
+
+}
+
+console.log(balloons);
+
+// var balloon = new Balloon(new Point(100, 100));
+// var balloon2 = new Balloon(new Point(200, 200));
 
 
 //-----------------------
 //Calling the animation function
 
 function onFrame(event){
-	balloon.animate(event);
-	balloon2.animate(event);
+	// balloon.animate(event);
+for (var i = 0; i < balloons.length; i++){
+
+balloons[i].animate(event);
+console.log(balloons[i])
+
+}
+
+
 }
 
 </script>
