@@ -35,7 +35,7 @@ var head = new Path();
 	var cord = new Path({
 		// 80% black:
 		strokeColor: [0.8],
-		strokeWidth: 5,
+		// strokeWidth: 5,
 		strokeCap: 'round'
 	});
 
@@ -65,19 +65,24 @@ group.style = {
 
 //-----------------------
 //creating the symbol
-var symbol = new Symbol(group);
+// var symbol = new Symbol(group);
 
+
+//-------------------------
 // Place the instances of the symbol:
 for (var i = 0; i < count; i++) {
 	// The center position is a random point in the view:
 	var center = Point.random() * view.size;
-	var placedSymbol = symbol.place(center);
-	var child = project.activeLayer.children[i];
-	placedSymbol.scale(i / count);
-
+	group.position = center;
+	// var balloons = balloon[i];
+	
+	var copy = group.clone(i);
+	copy.scale(i / count);
+console.log(group);
 	//trying to have random colors for each balloon but only applies to all on refresh
-	group.firstChild.fillColor = 'red';
-	group.firstChild.fillColor.hue = Math.random() * 360;
+	head.fillColor = 'red';
+	head.fillColor.hue = Math.random() * 360;
+
 }
 
 
@@ -92,7 +97,7 @@ function onFrame(event) {
 		
 		// Move the item 1/20th of its width to the right. This way
 		// larger circles move faster than smaller circles:
-		item.position.x += item.bounds.width / 50;
+		item.position.x += item.bounds.width / 100;
 
 		// If the item has left the view on the right, move it back
 		// to the left:
@@ -100,6 +105,7 @@ function onFrame(event) {
 			item.position.x = -item.bounds.width;
 		}
 	}
+	
 }
 
 </script>
